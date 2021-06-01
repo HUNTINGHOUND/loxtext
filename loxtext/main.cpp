@@ -1,14 +1,17 @@
-//
-//  main.cpp
-//  loxtext
-//
-//  Created by Morgan Xu on 5/31/21.
-//
+#include "includes.hpp"
+#include "terminal.hpp"
+#include "input.hpp"
+#include "output.hpp"
 
-#include <iostream>
 
-int main(int argc, const char * argv[]) {
-    // insert code here...
-    std::cout << "Hello, World!\n";
+int main() {
+    Terminal::enableRawMode();
+    Terminal::initEditor();
+    
+    while(true) {
+        Output::editorRefreashScreen();
+        Input::editorProcessKeypress();
+    }
+    
     return 0;
 }
