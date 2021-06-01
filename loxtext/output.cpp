@@ -9,6 +9,7 @@ void Output::editorRefreashScreen() {
     
     editorDrawRows(&buffer);
     
+    buffer += "\x1b[";
     buffer += "\x1b[H";
     buffer += "\x1b[?25h";
     

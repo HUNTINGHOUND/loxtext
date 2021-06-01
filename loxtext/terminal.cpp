@@ -64,6 +64,8 @@ int Terminal::getWindowSize(int* rows, int* cols) {
 }
 
 void Terminal::initEditor() {
+    E.cx = 0;
+    E.cy = 0;
     if(getWindowSize(&E.screenrows, &E.screencols) == -1) kill("getWindowSize");
 }
 

@@ -5,6 +5,7 @@
 #include "includes.hpp"
 
 struct EditorConfig {
+    int cx, cy;
     int screenrows;
     int screencols;
     termios og_termios;
