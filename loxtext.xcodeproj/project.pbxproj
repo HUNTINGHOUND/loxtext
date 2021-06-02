@@ -11,6 +11,8 @@
 		908150BC26654023001E461C /* terminal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 908150BA26654023001E461C /* terminal.cpp */; };
 		908150C3266553C5001E461C /* input.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 908150C1266553C5001E461C /* input.cpp */; };
 		908150C72665544F001E461C /* output.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 908150C52665544F001E461C /* output.cpp */; };
+		908150CB2666773D001E461C /* fileio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 908150C92666773D001E461C /* fileio.cpp */; };
+		908150CF2667B748001E461C /* editorOP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 908150CD2667B748001E461C /* editorOP.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -35,6 +37,11 @@
 		908150C2266553C5001E461C /* input.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = input.hpp; sourceTree = "<group>"; };
 		908150C52665544F001E461C /* output.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = output.cpp; sourceTree = "<group>"; };
 		908150C62665544F001E461C /* output.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = output.hpp; sourceTree = "<group>"; };
+		908150C92666773D001E461C /* fileio.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = fileio.cpp; sourceTree = "<group>"; };
+		908150CA2666773D001E461C /* fileio.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = fileio.hpp; sourceTree = "<group>"; };
+		908150CD2667B748001E461C /* editorOP.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = editorOP.cpp; sourceTree = "<group>"; };
+		908150CE2667B748001E461C /* editorOP.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = editorOP.hpp; sourceTree = "<group>"; };
+		908150D62667CD88001E461C /* pre.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pre.pch; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,6 +82,11 @@
 				908150C2266553C5001E461C /* input.hpp */,
 				908150C52665544F001E461C /* output.cpp */,
 				908150C62665544F001E461C /* output.hpp */,
+				908150C92666773D001E461C /* fileio.cpp */,
+				908150CA2666773D001E461C /* fileio.hpp */,
+				908150CD2667B748001E461C /* editorOP.cpp */,
+				908150CE2667B748001E461C /* editorOP.hpp */,
+				908150D62667CD88001E461C /* pre.pch */,
 			);
 			path = loxtext;
 			sourceTree = "<group>";
@@ -137,8 +149,10 @@
 			files = (
 				908150C72665544F001E461C /* output.cpp in Sources */,
 				908150B326641188001E461C /* main.cpp in Sources */,
+				908150CB2666773D001E461C /* fileio.cpp in Sources */,
 				908150BC26654023001E461C /* terminal.cpp in Sources */,
 				908150C3266553C5001E461C /* input.cpp in Sources */,
+				908150CF2667B748001E461C /* editorOP.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -151,7 +165,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -210,7 +224,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -260,6 +274,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = loxtext/pre.pch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -268,6 +284,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = loxtext/pre.pch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
