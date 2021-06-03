@@ -14,7 +14,7 @@ int main(int argc, char* argv[]) {
         FileIO::editorOpen(filename);
     }
     
-    Output::editorSetStatusMessage("HELP: Ctrl-Q = quit", std::vector<std::string>{});
+    Output::editorSetStatusMessage("HELP: Ctrl-Q = quit | Ctrl-S = save", std::vector<std::string>{});
     
     while(true) {
         Output::editorRefreashScreen();

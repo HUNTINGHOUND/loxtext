@@ -18,6 +18,7 @@ struct EditorConfig {
     int screenrows;
     int screencols;
     int numsrows;
+    int dirty;
     std::string statusmsg;
     time_t statusmsg_time;
     std::vector<Erow> row;

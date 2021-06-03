@@ -107,7 +107,8 @@ void Output::editorDrawStatusBar(std::string* buffer) {
     buffer->append("\x1b[7m");
     
     std::stringstream status, rstatus;
-    status << std::setw(20) << (E.filename.empty() ? "[No Name]" : E.filename) << " - " << E.numsrows << " lines";
+    status << std::setw(20) << (E.filename.empty() ? "[No Name]" : E.filename) << " - " << E.numsrows << " lines "
+    << (E.dirty != 0 ? "(modified)" : "");
     std::string statusStr = status.str();
     int len = (int)statusStr.size();
     
@@ -160,4 +161,17 @@ void Output::editorRowInsertChar(Erow& row, int at, int c) {
     tobeinserted += (char)c;
     row.chars.insert(at, tobeinserted);
     editorUpdateRows(row);
+}
+
+void Output::editorRowDelChar(Erow& row, int at) {
+    if(at < 0 || at >= row.chars.size()) return;
+    row.chars.erase(row.chars.begin() + at);
+    editorUpdateRows(row);
+    E.dirty++;
+}
+
+void Output::editorRowAppendString(Erow& row, std::string& string) {
+    row.chars += string;
+    editorUpdateRows(row);
+    E.dirty++;
 }

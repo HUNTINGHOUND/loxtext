@@ -5,6 +5,8 @@
 
 namespace EditorOP {
 void editorInsertChar(int c);
+void editorDelChar();
+void editorInsertNewLine();
 }
 
 #endif /* editorOP_hpp */

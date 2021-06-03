@@ -12,7 +12,7 @@
 
 namespace FileIO {
 void editorOpen(std::string& filename);
-bool editorRowstoString(std::string* buffer, int& rowsread);
+void editorRowstoString(std::string* buffer);
 void editorSave();
 }
 

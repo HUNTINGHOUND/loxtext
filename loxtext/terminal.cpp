@@ -109,6 +109,7 @@ void Terminal::initEditor() {
     E.rowoff = 0;
     E.coloff = 0;
     E.numsrows = 0;
+    E.dirty = 0;
     E.filename = "";
     E.statusmsg = "";
     E.statusmsg_time = 0;

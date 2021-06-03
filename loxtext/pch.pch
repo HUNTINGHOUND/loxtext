@@ -1,0 +1,17 @@
+#ifndef pch_h
+#define pch_h
+
+#include <string>
+#include <sstream>
+#include <vector>
+#include <iostream>
+#include <cstdlib>
+#include <cstdio>
+#include <cerrno>
+#include <unistd.h>
+#include <termios.h>
+#include <fstream>
+#include <sys/ioctl.h>
+
+
+#endif /* pch_h */

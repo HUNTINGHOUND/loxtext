@@ -3,22 +3,35 @@
 #include "input.hpp"
 #include "terminal.hpp"
 #include "editorOP.hpp"
+#include "fileio.hpp"
+#include "output.hpp"
 
 void Input::editorProcessKeypress() {
+    static int quit_times = QUIT_TIMES;
     int c = Terminal::editorReadKey();
     
     if(c == Terminal::ctrl_key('q')) {
+        if(E.dirty && quit_times > 0) {
+            Output::editorSetStatusMessage("WARNING: File has unsaved changes. Press Ctrl-Q % more times to quit.", {std::to_string(quit_times)});
+            quit_times--;
+            return;
+        }
         write(STDOUT_FILENO, "\x1b[2J", 4);
         write(STDOUT_FILENO, "\x1b[H", 3);
         exit(0);
     } else if (c == Terminal::ctrl_key('h')) {
-        
+        EditorOP::editorDelChar();
+        return;
     } else if (c == Terminal::ctrl_key('l')) {
-        
+        return;
+    } else if (c == Terminal::ctrl_key('s')) {
+        FileIO::editorSave();
+        return;
     }
     
     switch (c) {
         case '\r':
+            EditorOP::editorInsertNewLine();
             break;
             
         case PAGE_UP:
@@ -55,7 +68,8 @@ void Input::editorProcessKeypress() {
             
         case BACKSPACE:
         case DEL_KEY:
-            
+            if(c == DEL_KEY) editorMoveCursor(ARROW_RIGHT);
+            EditorOP::editorDelChar();
             break;
             
         case '\x1b':
@@ -66,6 +80,8 @@ void Input::editorProcessKeypress() {
             EditorOP::editorInsertChar(c);
             break;
     }
+    
+    quit_times = QUIT_TIMES;
 }
 
 void Input::editorMoveCursor(int key) {

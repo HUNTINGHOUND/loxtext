@@ -16,6 +16,8 @@ void editorDrawStatusBar(std::string* buffer);
 void editorSetStatusMessage(const std::string& fmt, std::vector<std::string> args);
 void editorDrawMessageBar(std::string* buffer);
 void editorRowInsertChar(Erow& row, int at, int c);
+void editorRowDelChar(Erow& row, int at);
+void editorRowAppendString(Erow& row, std::string& string);
 }
 
 #endif /* output_hpp */

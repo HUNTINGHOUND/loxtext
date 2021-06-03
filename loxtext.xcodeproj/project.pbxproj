@@ -28,6 +28,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		90270F90266898FC002C211C /* pch.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pch.pch; sourceTree = "<group>"; };
 		908150AF26641188001E461C /* loxtext */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = loxtext; sourceTree = BUILT_PRODUCTS_DIR; };
 		908150B226641188001E461C /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		908150BA26654023001E461C /* terminal.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = terminal.cpp; sourceTree = "<group>"; };
@@ -41,7 +42,6 @@
 		908150CA2666773D001E461C /* fileio.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = fileio.hpp; sourceTree = "<group>"; };
 		908150CD2667B748001E461C /* editorOP.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = editorOP.cpp; sourceTree = "<group>"; };
 		908150CE2667B748001E461C /* editorOP.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = editorOP.hpp; sourceTree = "<group>"; };
-		908150D62667CD88001E461C /* pre.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pre.pch; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,7 +86,7 @@
 				908150CA2666773D001E461C /* fileio.hpp */,
 				908150CD2667B748001E461C /* editorOP.cpp */,
 				908150CE2667B748001E461C /* editorOP.hpp */,
-				908150D62667CD88001E461C /* pre.pch */,
+				90270F90266898FC002C211C /* pch.pch */,
 			);
 			path = loxtext;
 			sourceTree = "<group>";
@@ -275,7 +275,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = loxtext/pre.pch;
+				GCC_PREFIX_HEADER = ./loxtext/pch.pch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -285,7 +285,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = loxtext/pre.pch;
+				GCC_PREFIX_HEADER = ./loxtext/pch.pch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
