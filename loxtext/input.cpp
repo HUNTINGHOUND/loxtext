@@ -118,3 +118,26 @@ void Input::editorMoveCursor(int key) {
         E.cx = rowlen;
     }
 }
+
+std::string Input::editorPrompt(const std::string& prompt) {
+    std::string buf = "";
+    while(true) {
+        Output::editorSetStatusMessage(prompt, {buf});
+        Output::editorRefreashScreen();
+        
+        int c = Terminal::editorReadKey();
+        if(c == DEL_KEY || c == Terminal::ctrl_key('h') || c == BACKSPACE) {
+            if(buf.size() != 0) buf.pop_back();
+        } else if(c == '\x1b') {
+            Output::editorSetStatusMessage("", {});
+            return std::string();
+        } else if(c == '\r') {
+            if(buf.size() != 0) {
+                Output::editorSetStatusMessage("", {});
+                return buf;
+            }
+        } else if(!iscntrl(c) && c < 128) {
+            buf += (char)c;
+        }
+    }
+}

@@ -1,6 +1,7 @@
 #include "fileio.hpp"
 #include "terminal.hpp"
 #include "output.hpp"
+#include "input.hpp"
 
 void FileIO::editorOpen(std::string& filename) {
     E.filename = filename;
@@ -30,7 +31,13 @@ void FileIO::editorRowstoString(std::string* buffer) {
 }
 
 void FileIO::editorSave() {
-    if(E.filename.empty()) return;
+    if(E.filename.empty()) {
+        E.filename = Input::editorPrompt("Save as: % (ESC to cancel)");
+        if(E.filename.empty()) {
+            Output::editorSetStatusMessage("Save aborted.", {});
+            return;
+        }
+    }
     
     std::string buffer = "";
     editorRowstoString(&buffer);
