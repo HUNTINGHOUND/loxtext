@@ -175,3 +175,18 @@ void Output::editorRowAppendString(Erow& row, std::string& string) {
     editorUpdateRows(row);
     E.dirty++;
 }
+
+int Output::editorRowRxToCx(Erow& row, int rx) {
+    int cur_rx = 0;
+    for(int cx = 0; cx < row.chars.size(); cx++) {
+        if(row.chars[cx] == '\t') {
+            cur_rx += (tablen - 1) - (cur_rx % tablen);
+        }
+        
+        cur_rx++;
+        
+        if(cur_rx > rx) return cx;
+    }
+    
+    return (int)row.chars.size();
+}

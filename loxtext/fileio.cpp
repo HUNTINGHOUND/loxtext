@@ -32,7 +32,7 @@ void FileIO::editorRowstoString(std::string* buffer) {
 
 void FileIO::editorSave() {
     if(E.filename.empty()) {
-        E.filename = Input::editorPrompt("Save as: % (ESC to cancel)");
+        E.filename = Input::editorPrompt("Save as: % (ESC to cancel)", nullptr);
         if(E.filename.empty()) {
             Output::editorSetStatusMessage("Save aborted.", {});
             return;

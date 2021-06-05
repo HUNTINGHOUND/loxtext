@@ -12,6 +12,7 @@
 #include <termios.h>
 #include <fstream>
 #include <sys/ioctl.h>
+#include <functional>
 
 
 #endif /* pch_h */

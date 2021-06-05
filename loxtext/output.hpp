@@ -18,6 +18,7 @@ void editorDrawMessageBar(std::string* buffer);
 void editorRowInsertChar(Erow& row, int at, int c);
 void editorRowDelChar(Erow& row, int at);
 void editorRowAppendString(Erow& row, std::string& string);
+int editorRowRxToCx(Erow& row, int rx);
 }
 
 #endif /* output_hpp */

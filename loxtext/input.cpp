@@ -5,6 +5,7 @@
 #include "editorOP.hpp"
 #include "fileio.hpp"
 #include "output.hpp"
+#include "find.hpp"
 
 void Input::editorProcessKeypress() {
     static int quit_times = QUIT_TIMES;
@@ -26,6 +27,9 @@ void Input::editorProcessKeypress() {
         return;
     } else if (c == Terminal::ctrl_key('s')) {
         FileIO::editorSave();
+        return;
+    } else if (c == Terminal::ctrl_key('f')) {
+        Find::editorFind();
         return;
     }
     
@@ -119,7 +123,7 @@ void Input::editorMoveCursor(int key) {
     }
 }
 
-std::string Input::editorPrompt(const std::string& prompt) {
+std::string Input::editorPrompt(const std::string& prompt, std::function<void(std::string&, int)>* callback) {
     std::string buf = "";
     while(true) {
         Output::editorSetStatusMessage(prompt, {buf});
@@ -130,14 +134,18 @@ std::string Input::editorPrompt(const std::string& prompt) {
             if(buf.size() != 0) buf.pop_back();
         } else if(c == '\x1b') {
             Output::editorSetStatusMessage("", {});
+            if(callback) (*callback)(buf, c);
             return std::string();
         } else if(c == '\r') {
             if(buf.size() != 0) {
                 Output::editorSetStatusMessage("", {});
+                if(callback) (*callback)(buf, c);
                 return buf;
             }
         } else if(!iscntrl(c) && c < 128) {
             buf += (char)c;
         }
+        
+        if(callback) (*callback)(buf,c);
     }
 }
