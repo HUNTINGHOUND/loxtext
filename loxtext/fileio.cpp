@@ -6,6 +6,8 @@
 void FileIO::editorOpen(std::string& filename) {
     E.filename = filename;
     
+    Output::editorSelectSyntaxHighlight();
+    
     std::fstream file(filename);
     if(!file.is_open()) Terminal::kill("fstream open");
     
@@ -14,7 +16,7 @@ void FileIO::editorOpen(std::string& filename) {
         while (line.size() > 0 && (line.back() == '\n' ||
                                    line.back() == '\r'))
             line.pop_back();
-        E.row.push_back(Erow{line, ""});
+        E.row.push_back(Erow{{},line, ""});
         Output::editorUpdateRows(E.row.back());
         E.numsrows++;
     }
@@ -33,10 +35,15 @@ void FileIO::editorRowstoString(std::string* buffer) {
 void FileIO::editorSave() {
     if(E.filename.empty()) {
         E.filename = Input::editorPrompt("Save as: % (ESC to cancel)", nullptr);
+        std::fstream log("log.txt", std::fstream::out);
+        log << "executed out";
+        log.close();
         if(E.filename.empty()) {
             Output::editorSetStatusMessage("Save aborted.", {});
             return;
         }
+        
+        Output::editorSelectSyntaxHighlight();
     }
     
     std::string buffer = "";

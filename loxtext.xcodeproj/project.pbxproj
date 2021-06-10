@@ -32,6 +32,7 @@
 		90270F90266898FC002C211C /* pch.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pch.pch; sourceTree = "<group>"; };
 		90270F93266B802D002C211C /* find.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = find.cpp; sourceTree = "<group>"; };
 		90270F94266B802E002C211C /* find.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = find.hpp; sourceTree = "<group>"; };
+		90270F97266CCA31002C211C /* filetypes.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = filetypes.hpp; sourceTree = "<group>"; };
 		908150AF26641188001E461C /* loxtext */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = loxtext; sourceTree = BUILT_PRODUCTS_DIR; };
 		908150B226641188001E461C /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		908150BA26654023001E461C /* terminal.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = terminal.cpp; sourceTree = "<group>"; };
@@ -92,6 +93,7 @@
 				90270F90266898FC002C211C /* pch.pch */,
 				90270F93266B802D002C211C /* find.cpp */,
 				90270F94266B802E002C211C /* find.hpp */,
+				90270F97266CCA31002C211C /* filetypes.hpp */,
 			);
 			path = loxtext;
 			sourceTree = "<group>";

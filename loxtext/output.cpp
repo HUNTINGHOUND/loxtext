@@ -1,4 +1,6 @@
 #include "output.hpp"
+#include "filetypes.hpp"
+
 
 void Output::editorScroll() {
     E.rx = E.cx;
@@ -70,7 +72,52 @@ void Output::editorDrawRows(std::string* buffer) {
             int len = (int)E.row[filerow].render.size() - E.coloff;
             if(len < 0) len = 0;
             if(len > E.screencols) len = E.screencols;
-            if(len != 0) buffer->append(E.row[filerow].render.substr(E.coloff, len));
+            
+            std::string_view tobeprinted = E.row[filerow].render;
+            auto hlit = E.row[filerow].hl.begin() + E.coloff;
+            tobeprinted.remove_prefix(E.coloff);
+            
+            
+            int curr_color = -1;
+            for(int i = 0; i < len; i++) {
+                if(iscntrl(tobeprinted[i])) {
+                    char sym = (tobeprinted[i] <= 26) ? '@' + tobeprinted[i] : '?';
+                    buffer->append("\x1b[7m");
+                    buffer->push_back(sym);
+                    buffer->append("\x1b[m");
+                    
+                    if(curr_color != -1) {
+                        std::string buf;
+                        buf += "\x1b[";
+                        buf += std::to_string(curr_color);
+                        buf += "m";
+                        
+                        buffer->append(buf);
+                    }
+                } else if(*hlit == HL_NORMAL) {
+                    if(curr_color != -1) {
+                        buffer->append("\x1b[39m");
+                        curr_color = -1;
+                    }
+                    buffer->push_back(tobeprinted[i]);
+                } else {
+                    int color = editorSyntaxToColor(*hlit);
+                    if(color != curr_color) {
+                        curr_color = color;
+                        std::string buf = "";
+                        
+                        buf += "\x1b[";
+                        buf += std::to_string(color);
+                        buf += "m";
+                        
+                        buffer->append(buf);
+                    }
+                    buffer->push_back(tobeprinted[i]);
+                }
+                hlit++;
+            }
+            
+            buffer->append("\x1b[39m");
         }
         
         buffer->append("\x1b[K");
@@ -89,6 +136,8 @@ void Output::editorUpdateRows(Erow& row) {
             row.render += row.chars[j];
         }
     }
+    
+    editorUpdateSyntax(row);
 }
 
 int Output::editorRowCxtoRx(Erow &row, int cx) {
@@ -112,7 +161,7 @@ void Output::editorDrawStatusBar(std::string* buffer) {
     std::string statusStr = status.str();
     int len = (int)statusStr.size();
     
-    rstatus << E.cy + 1 << "/" << E.numsrows;
+    rstatus << (E.syntax ? E.syntax->filetype : "no ft") << " | " << E.cy + 1 << "/" << E.numsrows;
     std::string rstatusStr = rstatus.str();
     int rlen = (int)rstatusStr.size();
     
@@ -189,4 +238,129 @@ int Output::editorRowRxToCx(Erow& row, int rx) {
     }
     
     return (int)row.chars.size();
+}
+
+void Output::editorUpdateSyntax(Erow& row) {
+    row.hl = std::vector<uint8_t>(row.render.size());
+    std::fill(row.hl.begin(), row.hl.end(), HL_NORMAL);
+    
+    if(E.syntax == nullptr) return;
+    
+    
+    std::string_view scs = E.syntax->singleline_comment_start;
+    std::string_view renderView = row.render;
+    
+    bool prev_sep = true;
+    int in_string = 0;
+    
+    int i = 0;
+    while(i < row.hl.size()) {
+        uint8_t prev_hl = (i > 0) ? row.hl[i - 1] : HL_NORMAL;
+        
+        if(scs.size() != 0 && in_string == 0) {
+            if(renderView.substr(i, scs.length()).compare(scs) == 0) {
+                std::fill(row.hl.begin() + i, row.hl.end(), HL_COMMENT);
+                break;
+            }
+        }
+        
+        if(E.syntax->flags & hl_highlight_strings) {
+            if(in_string != 0) {
+                row.hl[i] = HL_STRING;
+                if(renderView[i] == '\\' && i + 1 < row.render.size()) {
+                    row.hl[i + 1] = HL_STRING;
+                    i += 2;
+                    continue;
+                }
+                if(renderView[i] == in_string) in_string = 0;
+                i++;
+                prev_sep = true;
+                continue;
+            } else {
+                if(renderView[i] == '"' || renderView[i] == '\'') {
+                    in_string = renderView[i];
+                    row.hl[i] = HL_STRING;
+                    i++;
+                    continue;
+                }
+            }
+        }
+        
+        if(E.syntax->flags & hl_highlight_numbers) {
+            if((isdigit(renderView[i]) && (prev_sep || prev_hl == HL_NUMBER)) ||
+               (renderView[i] == '.' && prev_hl == HL_NUMBER)) {
+                row.hl[i] = HL_NUMBER;
+                i++;
+                prev_sep = 0;
+                continue;
+            }
+        }
+        
+        
+        if(prev_sep) {
+            auto keywordIt = E.syntax->keywords.begin();
+            for(;keywordIt != E.syntax->keywords.end(); keywordIt++) {
+                
+                std::string_view word = *keywordIt;
+                bool kw2 = word.back() == '|';
+                if(kw2) word.remove_suffix(1);;
+                
+                if(i + word.size() <= row.render.size() &&
+                   word.compare(row.render.substr(i, word.size())) == 0 &&
+                   is_seperator(row.render[i + word.size()])) {
+                
+                    std::fill(row.hl.begin() + i, row.hl.begin() + i + word.size(), kw2 ? HL_KEYWORD2 : HL_KEYWORD1);
+                    i += word.size();
+                    break;
+                }
+            }
+            
+            prev_sep = false;
+        }
+        
+        prev_sep = is_seperator(renderView[i]);
+        i++;
+    }
+    
+}
+
+int Output::editorSyntaxToColor(int hl) {
+    switch (hl) {
+        case HL_KEYWORD2: return 32;
+        case HL_KEYWORD1: return 33;
+        case HL_COMMENT: return 26;
+        case HL_STRING: return 35;
+        case HL_NUMBER: return 31;
+        default: return 37;
+    }
+}
+
+bool Output::is_seperator(int c) {
+    return std::isspace(c) || c == '\0' || std::strchr(",.()+-/*=~%<>[];", c) != nullptr;
+}
+
+void Output::editorSelectSyntaxHighlight() {
+    E.syntax = nullptr;
+    if (E.filename.empty()) return;
+    
+    
+    std::string_view fname = E.filename;
+    size_t pos = fname.find('.');
+    
+    for(unsigned int i = 0; i < HLDB.size(); i++) {
+        EditorSyntax* s = &HLDB[i];
+        for(unsigned int j = 0; j < s->filematch.size(); j++) {
+            bool is_ext = (s->filematch[j][0] == '.');
+            if((is_ext && pos != std::string::npos && s->filematch[j].compare(fname.substr(pos, std::string::npos)) == 0) ||
+               (!is_ext && fname.find(s->filematch[j]) != std::string::npos)) {
+                E.syntax = s;
+                
+                for(int filerow = 0; filerow < E.numsrows; filerow++) {
+                    editorUpdateSyntax(E.row[filerow]);
+                }
+                
+                return;
+            }
+        }
+    }
 }

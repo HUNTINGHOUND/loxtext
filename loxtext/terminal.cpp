@@ -1,4 +1,3 @@
-
 #include "terminal.hpp"
 
 EditorConfig E;
@@ -113,6 +112,7 @@ void Terminal::initEditor() {
     E.filename = "";
     E.statusmsg = "";
     E.statusmsg_time = 0;
+    E.syntax = nullptr;
     if(getWindowSize(&E.screenrows, &E.screencols) == -1) kill("getWindowSize");
     E.screenrows -= 2;
 }

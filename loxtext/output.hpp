@@ -19,6 +19,10 @@ void editorRowInsertChar(Erow& row, int at, int c);
 void editorRowDelChar(Erow& row, int at);
 void editorRowAppendString(Erow& row, std::string& string);
 int editorRowRxToCx(Erow& row, int rx);
+void editorUpdateSyntax(Erow& row);
+int editorSyntaxToColor(int hl);
+bool is_seperator(int c);
+void editorSelectSyntaxHighlight();
 }
 
 #endif /* output_hpp */

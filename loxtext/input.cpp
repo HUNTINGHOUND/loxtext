@@ -1,5 +1,3 @@
-
-
 #include "input.hpp"
 #include "terminal.hpp"
 #include "editorOP.hpp"
@@ -135,11 +133,14 @@ std::string Input::editorPrompt(const std::string& prompt, std::function<void(st
         } else if(c == '\x1b') {
             Output::editorSetStatusMessage("", {});
             if(callback) (*callback)(buf, c);
-            return std::string();
+            return "";
         } else if(c == '\r') {
             if(buf.size() != 0) {
                 Output::editorSetStatusMessage("", {});
                 if(callback) (*callback)(buf, c);
+                std::fstream log("log.txt", std::fstream::out);
+                log << "executed";
+                log.close();
                 return buf;
             }
         } else if(!iscntrl(c) && c < 128) {
@@ -148,4 +149,5 @@ std::string Input::editorPrompt(const std::string& prompt, std::function<void(st
         
         if(callback) (*callback)(buf,c);
     }
+    
 }

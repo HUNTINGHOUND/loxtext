@@ -13,6 +13,7 @@
 #include <fstream>
 #include <sys/ioctl.h>
 #include <functional>
+#include <algorithm>
 
 
 #endif /* pch_h */

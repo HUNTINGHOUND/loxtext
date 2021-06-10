@@ -9,7 +9,7 @@ void Find::editorFind() {
     int og_rowoff = E.rowoff;
     
     std::function<void(std::string&, int)> callback = editorFindCallback;
-    std::string query = Input::editorPrompt("Search: % (ESC to cancel)", &callback);
+    std::string query = Input::editorPrompt("Search: % (Use ESC/Arrows/Enter)", &callback);
     if(!query.empty()) return;
     
     E.cx = og_cx;
@@ -23,8 +23,14 @@ void Find::editorFindCallback(std::string& query, int key) {
     static int last_matchx = -1;
     static int direction = 1;
     
-    std::fstream log("log.txt");
-    log << "query is: " << query << "\n";
+    static int saved_hl_line;
+    static std::vector<uint8_t> saved_hl;
+    
+    if(!saved_hl.empty()) {
+        E.row[saved_hl_line].hl = saved_hl;
+        saved_hl.clear();
+    }
+    
     
     if(key == '\r' || key == '\x1b') {
         last_matchy = -1;
@@ -32,10 +38,8 @@ void Find::editorFindCallback(std::string& query, int key) {
         direction = 1;
         return;
     } else if(key == ARROW_RIGHT || key == ARROW_DOWN) {
-        log << "Input key: arrow right or down\n";
         direction = 1;
     } else if(key == ARROW_LEFT || key == ARROW_UP) {
-        log << "Input key: arrow left or up\n";
         direction = -1;
     } else {
         last_matchy = -1;
@@ -47,25 +51,20 @@ void Find::editorFindCallback(std::string& query, int key) {
     int current = last_matchy;
     if(current == -1) current = 0;
     for(int i = 0; i <= E.numsrows; i++) {
-        log << "last x = " << last_matchx << "\n";
-        log << "last y = " << last_matchy << "\n";
-        log << "direction = " << direction << "\n";
-        log << "current = " << current << "\n";
         Erow* row = &E.row[current];
+        std::string_view render = row->render;
         
         size_t pos;
         if(i == 0 && last_matchx != -1) {
             if(direction == 1) {
-                log << "here \n";
                 if(last_matchx == row->render.size()) pos = std::string::npos;
                 else {
-                    pos = row->render.substr(last_matchx + 1, std::string::npos).find(query);
+                    pos = render.substr(last_matchx + 1, std::string::npos).find(query);
                     pos += pos == std::string::npos ? 0 : last_matchx + 1;
-                    log << "pos here = " << pos << '\n';
                 }
             } else {
                 if(last_matchx == 0) pos = std::string::npos;
-                else pos = row->render.substr(0, last_matchx + query.size() - 1).rfind(query);
+                else pos = render.substr(0, last_matchx + query.size() - 1).rfind(query);
             }
         } else {
             if(direction == 1) pos = row->render.find(query);
@@ -73,17 +72,20 @@ void Find::editorFindCallback(std::string& query, int key) {
         }
         
         if(pos != std::string::npos) {
-            log << "found pos = " << pos << "\n";
             last_matchy = current;
             last_matchx = pos;
             E.cy = current;
             E.cx = Output::editorRowRxToCx(*row, pos);
             E.rowoff = E.numsrows;
+            
+            saved_hl_line = current;
+            saved_hl = row->hl;
+            
+            std::fill(row->hl.begin() + pos, row->hl.begin() + pos + query.size(), HL_MATCH);
             break;
         }
         current += direction;
         if(current == -1) current = E.numsrows - 1;
         else if(current == E.numsrows) current = 0;
     }
-    log << "===================================\n\n";
 }
